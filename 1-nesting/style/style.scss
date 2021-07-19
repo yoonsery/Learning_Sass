@@ -1,0 +1,56 @@
+/* 
+여러줄 주석이며
+이 주석은 css로 변환될 때 보입니다.
+*/
+// ex-1
+nav {
+  background: lightpink;
+  padding: 10px;
+  height: 50px;
+  ul {
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+    li {
+      color: white;
+      margin-right: 10px;
+    }
+  }
+}
+
+// ex-2  👉🏻  nesting은 선택자뿐만 아니라 스타일 속성도 가능하다 background 를 중첩함
+.background-img {
+  width: 100%;
+  height: auto;
+  background: {
+    image: url('./sample.jpg');
+    position: center center;
+    repeat: no-repeat;
+  }
+}
+
+// ex-3  👉🏻  & ampersand는 상위에 있는 부모선택자를 , hover, before, active, nth-child(2) 등등 사용
+.box {
+  width: 300px;
+  height: 300px;
+  background-color: red;
+  transition: all 1s;
+  &:hover {
+    background-color: blue;
+  }
+}
+
+// ex-4  👉🏻 @at-root 중첩에서 벗어나고 싶은 선택자 앞에 작성
+
+.one {
+  color: red;
+  .two {
+    color: green;
+    .three {
+      color: blue;
+      @at-root p {
+        color: lightskyblue;
+      }
+    }
+  }
+}
