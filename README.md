@@ -154,23 +154,23 @@ maps는 `( )`괄호 안에 `키: 값`의 형태로 저장하여 사용함
 
 ---
 
-#### 1. 변수의 유효범위 (scope)
+### 1. 변수의 유효범위 (scope)
 
 변수는 전역변수와 지역변수 두가지 종류가 있다
 
-##### 지역변수
+#### 지역변수
 
 지역변수는 선언된 중괄호 안에서 사용된다, 하위 단계에 있는 중괄호에서도 사용가능
 
-##### 전역변수
+#### 전역변수
 
 가장 윗부분에 정의하면 파일 내 어디서든지 사용가능
 전역변수를 파일로 만들어서 사용할 경우, 메인 scss(style.scss)에서 전역변수파일을
 다른 파일들보다 윗부분에 위치시킨다
 
-#### 2. Operator
+### 2. Operator
 
-##### 2-1. 비교연산자 (숫자형)
+#### 2-1. 비교연산자 (숫자형)
 
 ① <, <=, >, >=
 비교하거나 연산하는 값의 단위가 일치하지 않으면 에러발생, 단위가 없는 경우에는 에러 발생안함
@@ -181,21 +181,89 @@ maps는 `( )`괄호 안에 `키: 값`의 형태로 저장하여 사용함
 - 맵: 키와 값이 모두 동일할 때, 리스트: 들어있는 값들이 모두 동일할 때 true 리턴
 - boolean: true == true, false == false, null == null 각자 자신과 비교할 때만 true
 
-##### 2-2. 산술연산자 (숫자, 색)
+#### 2-2. 산술연산자 (숫자, 색)
 
 +, -, \*, /, %
 나누기할 때 사용하는 슬래시 `/`는 리스트에서도 사용하기 때문에 혼동을 줄 수 있다
 so, 괄호를 사용하거나 변수와 함께 사용, 덧셈을 할 때 함께 사용해서 `/`가 연산자임을 알려줘야함
 
-##### 2-3. String의 a + b
+#### 2-3. String의 a + b
 
 - a, b가 모두 문자열: ab를 합쳐서 새로운 문자열로 반환 'ab'
 - a, b 중 하나만 문자열: 문자열로 변환해 string으로 반환 `"Elapsed time: " + 10s; // "Elapsed time: 10s";`
 
-##### 2-4. 논리연산자 (불리언 타입)
+#### 2-4. 논리연산자 (불리언 타입)
 
 - `not`: true ⟶ false, false ⟶ true 반환
 - `and`: 두개 다 true ⟶ true, 하나라도 false면 false
 - `or`: 두개 다 false ⟶ false, 하나라도 true면 true
 
 ---
+
+### Mixin
+
+Mixin은 코드를 재사용하기 위해 만들어진 기능
+중복되는 코드는 mixin으로 만들어 놓고 원하는 선택자 블럭에 mixin을 include하면 된다
+
+#### 사용하기
+
+```scss
+@mixin 이름($size) { // ① 매개변수를 넣을 수 있다, parameter
+  // 중복되는 코드 작성
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: $size; ①
+}
+
+.button {
+  @include 이름(인수);
+}
+```
+
+반복하는 모든 코드를 하나의 mixin에 몰아넣어서 사용하지 마
+연관있는 스타일 속성끼리 묶어서 만들면 더 사용성이 높다
+
+#### Arguments (인수)
+
+1. Arguments
+   mixin 이름 뒤에 인수를 넣어서 사용할 수 있다 (예: ①)
+
+```scss
+.button {
+  @include 이름(20px); // 이렇게 사용 가능
+}
+```
+
+2. 기본값 설정
+   기본값을 설정하여 매개변수에 값이 들어오지 않을 때 기본으로 설정한 값을 사용할 수 있도록 함
+
+```scss
+@mixin flexCenter($size: 10rem) {
+  // 반복되는 코드..
+  font-size: $size;
+}
+
+.button {
+  @include flexCenter; // 인수를 지정하지 않았으나 기본값 10rem이 적용된다
+}
+```
+
+#### Content
+
+@content를 사용하면 원하는 부분에 스타일을 추가하여 전달할 수 있다
+
+```scss
+@mixin sample {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @content;
+}
+
+.container {
+  @include sample {
+    color: white; // mixin으로 지정된 값 외의 스타일 추가 가능
+  }
+}
+```
