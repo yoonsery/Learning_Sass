@@ -267,3 +267,57 @@ Mixin은 코드를 재사용하기 위해 만들어진 기능
   }
 }
 ```
+
+---
+
+### Extend
+
+#### 1. Extend
+
+Extend는 연관있는 요소들끼리 스타일 코드가 중복된 경우에 사용
+
+- 이미 스타일이 작성된 선택자의 클래스를 extend하거나
+- `%`를 사용해서 따로 스타일을 정의한 후 extend하여 원하는 선택자에게 적용해 줄 수 있다
+
+☑️ Mixin은 (관계 없는) 선택자에서 조금 다른 스타일을 적용시 사용
+☑️ extend는 관계 있는 선택자들의 동일한 소스코드 적용시 사용
+
+#### 2. extend 하는 2가지 방법
+
+##### 2-1. class 이름 가져오기
+
+```scss
+.profile-user {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  // code ...
+}
+
+.comment-user {
+  @extend .profile-user;
+}
+```
+
+⚠️ class명을 extend 하는 경우 다중 선택자 클래스를 사용할 수 없다
+(예: `.box .container` , `.box1 + .box2`)
+
+##### 2-2. % placeholder
+
+`%`로 선택자를 만든다, `@extend %선택자이름;` 사용
+%선택자는 css로 컴파일 되지 않는다
+클래스보다 %사용을 권장함
+
+```scss
+%base-button {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  // code ..
+}
+
+.message-button {
+  @extend %base-button;
+  color: #fff;
+}
+```
