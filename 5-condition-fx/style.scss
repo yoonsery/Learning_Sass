@@ -1,18 +1,18 @@
 @mixin avatar($size, $circle: false) {
-    width: $size;
-    height: $size;
-  
-    @if $circle {
-      border-radius: $size / 2;
-    }
+  width: $size;
+  height: $size;
+
+  @if $circle {
+    border-radius: $size / 2;
   }
-  
-  .square-av {
-    @include avatar(100px, $circle: false);
-  }
-  .circle-av {
-    @include avatar(100px, $circle: true);
-  }
+}
+
+.square-av {
+  @include avatar(100px, $circle: false);
+}
+.circle-av {
+  @include avatar(100px, $circle: true);
+}
 
 $light-background: #f2ece4;
 $light-text: #036;
@@ -37,70 +37,71 @@ $dark-text: #d2e1dd;
 }
 
 @mixin triangle($size, $color, $direction) {
-    height: 0;
-    width: 0;
-  
-    border-color: transparent;
-    border-style: solid;
-    border-width: ($size/2);
-  
-  
-    @if $direction == up {
-      border-bottom-color: $color;
-    } @else if $direction == right {
-      border-left-color: $color;
-    } @else if $direction == down {
-      border-top-color: $color;
-    } @else if $direction == left {
-      border-right-color: $color;
-    } @else {
-      @error "Unknown direction #{$direction}.";
-    }
-  }
-  
-  .next {
-    @include triangle(5px, black, right);
-  }
+  height: 0;
+  width: 0;
 
-  @for $i from 1 through 5 {
-    .test#{$i} {
-      background-image: url("../assets/phoster#{$i}.png");
-    }
-  } 
+  border-color: transparent;
+  border-style: solid;
+  border-width: ($size/2);
 
+  @if $direction == up {
+    border-bottom-color: $color;
+  } @else if $direction == right {
+    border-left-color: $color;
+  } @else if $direction == down {
+    border-top-color: $color;
+  } @else if $direction == left {
+    border-right-color: $color;
+  } @else {
+    @error "Unknown direction #{$direction}.";
+  }
+}
 
-  $color-palette: #dad5d2 #3a3532 #375945 #5b8767 #a6c198 #dbdfc8;
+.next {
+  @include triangle(5px, black, right);
+}
 
-  @each $color in $color-palette {
-    .icon-#{$color}{
-      background: $color;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-    }
+// 1, 5 포함해서 for loop
+@for $i from 1 through 5 {
+  .test#{$i} {
+    background-image: url('../assets/phoster#{$i}.png');
   }
+}
 
-  @function scale-below($value, $base, $ratio: 1.618) {
-    @while $value > $base {
-      $value: ($value/$ratio);
-    }
-    @return $value;
-  }
-  
-  $normal-font-size: 16px;
-  .sup {
-    font-size: scale-below(20px, 8px);
-  }
+$color-palette: #dad5d2 #3a3532 #375945 #5b8767 #a6c198 #dbdfc8;
 
-  @function pow($base, $exponent) { 
-    $result: 1;
-    @for $_ from 1 through $exponent {
-      $result: $result * $base;
-    }
-    @return $result;
+// 리스트 순회
+@each $color in $color-palette {
+  .icon-#{$color} {
+    background: $color;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
   }
-  
-  .sidebar {
-    float: left;
-    margin-left: pow(4, 3) * 1px;
+}
+
+@function scale-below($value, $base, $ratio: 1.618) {
+  @while $value > $base {
+    $value: ($value/$ratio);
   }
+  @return $value;
+}
+
+$normal-font-size: 16px;
+.sup {
+  font-size: scale-below(20px, 8px);
+}
+
+@function pow($base, $exponent) {
+  $result: 1;
+  @for $_ from 1 through $exponent {
+    // 의미없는 변수는 $_ 사용
+    $result: $result * $base;
+  }
+  @return $result;
+}
+
+.sidebar {
+  float: left;
+  margin-left: pow(4, 3) * 1px;
+}

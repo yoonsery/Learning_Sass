@@ -321,3 +321,220 @@ Extend는 연관있는 요소들끼리 스타일 코드가 중복된 경우에 �
   color: #fff;
 }
 ```
+
+---
+
+### 조건문과 반복문
+
+#### 1. 조건문
+
+##### 1-1 @if
+
+@if에 괄호없이 true, false를 반환할 수 있는 조건문을 작성하면 된다
+조건에는 논리연산자 and, or, not을 사용
+if문의 존건이 true 일 때만 `{ }`괄호 안에 있는 코드가 실행됨
+
+```scss
+@if (condition) {
+  // code executed when condition is true
+}
+```
+
+```scss
+@mixin avatar($size, $circle: false) {
+  width: $size;
+  height: $size;
+
+  @if $circle {
+    border-radius: $size / 2;
+  }
+}
+
+.square-av {
+  @include avatar(100px, $circle: false);
+}
+.circle-av {
+  @include avatar(100px, $circle: true);
+}
+```
+
+##### 1-2 @else
+
+if문의 조건이 false가 나오면 else문의 코드가 실행(JS랑 비슷~)
+
+```scss
+$light-background: #f2ece4;
+$light-text: #036;
+$dark-background: #6b717f;
+$dark-text: #d2e1dd;
+
+@mixin theme-colors($light-theme: true) {
+  @if $light-theme {
+    background-color: $light-background;
+    color: $light-text;
+  } @else {
+    background-color: $dark-background;
+    color: $dark-text;
+  }
+}
+
+.banner {
+  @include theme-colors($light-theme: true);
+  body.dark & {
+    // css ⟶ body.dark .banner
+    @include theme-colors($light-theme: false);
+  }
+}
+```
+
+##### 1-3 @else if
+
+```scss
+@mixin triangle($size, $color, $direction) {
+  border-color: transparent;
+  border-style: solid;
+  border-width: ($size/2);
+
+  @if $direction == up {
+    border-bottom-color: $color;
+  } @else if $direction == right {
+    border-left-color: $color;
+  } @else if $direction == down {
+    border-top-color: $color;
+  } @else if $direction == left {
+    border-right-color: $color;
+  } @else {
+    @error "Unknown direction #{$direction}.";
+  }
+}
+
+.next {
+  @include triangle(5px, black, right);
+}
+```
+
+#### 2. 반복문
+
+##### 2-1 @for
+
+@for는 정의한 횟수만큼 코드 실행을 반복한다
+from(시작: 이상) through(끝: 이하)
+`nth-`선택자를 사용시 유용함
+
+```scss
+for($변수) from (시작) through(끝) {
+  // 반복할 내용
+}
+```
+
+```scss
+// for문을 이용해 nth-선택자에게 각각의 image를 배경에 넣어준다.
+// 1, 5 포함해서 for loop
+@for $i from 1 through 5 {
+  .photo-box:nth-child(#{$i}) {
+    // ⟶ 사용할 변수자리에 #{ }
+    background-image: url('../assets/phoster#{$i}.png');
+  }
+}
+```
+
+##### 2-2 @each
+
+lists나 map의 각각의 요소마다 코드를 실행해서 스타일 적용할 수 있게 함
+
+```scss
+@each ($변수) in (리스트 or 맵) {
+  // 반복할 내용
+}
+```
+
+```scss
+// $color-palette 리스트에 들어있는 색상을 each문을 사용하여 background에 색상값을 넣어준다.
+$color-palette: #dad5d2 #3a3532 #375945 #5b8767 #a6c198 #dbdfc8;
+
+@each $color in $color-palette {
+  $i: index($color-palette, $color); //index는 list의 내장함수
+  .color-circle:nth-child(#{$i}) {
+    background: $color;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+}
+```
+
+`.color-circle:nth-child(1)`의 background 컬러는 $color-palette의 첫번째 값인
+`#dad5d2`가 지정됨 `.color-circle:nth-child(2)`는 두번째 값 ...
+
+##### 2-3 @while
+
+특정 조건에 충족될 때까지 코드를 무한 반복, 조건을 만나면 while 문을 빠져나옴
+거의 잘 사용하지 않음
+
+```scss
+@while 조건 {
+  // 반복할 내용
+}
+```
+
+#### 3. function
+
+##### 3-1 function
+
+`@function` 키워드를 사용하여 함수를 생성
+`함수이름()`형태로 함수를 호출하고 실행함, 함수안에서는 `@return`을 이용해 값을 반환함
+함수는 Mixin과 비슷하지만 mixin: 스타일 코드를 반환,
+function: `@return`키워드를 사용해서 값 자체를 반환
+
+```scss
+@function 함수이름($매개변수) {
+  // 실행 코드
+  @return 값;
+}
+```
+
+```scss
+//  거듭제곱을 구하는 함수
+
+@function pow($base, $exponent) {
+  $result: 1;
+  // 의미없는 변수는 $_ 사용
+  @for $_ from 1 through $exponent {
+    $result: $result * $base;
+  }
+  @return $result;
+}
+
+.sidebar {
+  float: left;
+  margin-left: pow(4, 3) * 1px; // margin-left: 64px;
+}
+```
+
+##### 3-2 내장함수 (list, map 참고)
+
+1. 색상함수
+
+- `lighten(color, amount)` : 기존 색상의 밝기를 높임 ( 0 ~ 100% 사이의 값)
+- `darken(color, amount)` : 기존 색상의 밝기를 낮춤 ( 0 ~ 100% 사이의 값)
+- `mix(color1, color2, weight)`: 2개의 색상을 섞어서 새로운 색상을 만듦
+
+2. 숫자함수
+
+- `max(number, ..)`: 괄호에 넣은 값 중에 가장 큰 수 반환
+- `min(number, ..)`: 괄호에 넣은 값 중에 가장 작은 수 반환
+- `percentage(number)`: 퍼센트로 숫자를 바꿈
+- `comparable(num1, num2)`: 숫자1과 숫자2가 비교 가능한지 확인 후 true / false 값을 반환
+
+3. 문자함수
+
+- `str-insert(string, insert, index)`: 문자열에 원하는 위치(index)에 문자를 넣은 후, 새로운 문자열 반환
+- `str-index(string, substring)`: 문자열에서 해당하는 문자의 index값을 반환
+- `to-upper-case(string)`: 문자열 전부를 대문자로 바꿈
+- `to-lower-case(string)`: 문자열 전부를 소문자로 바꿈
+
+4. 확인함수
+
+- `unit(number)`: 숫자의 단위를 반환해 줌
+- `unitless(number)`: 단위를 가지고 있는지 판단하여 true / false 값을 반환
+- `variable-exists(name)`: 변수가 현재 범위에 존재하는지 판단하여 true / false 값을 반환, 인수는 `$`없이 사용
