@@ -1,4 +1,4 @@
-[노션 강의록](https://www.notion.so/23157e6484a64582853c7867f9b88150?v=492e2c8d7a8e4e369c8badfecc5c6676)
+[노션 강의록](https://www.notion.so/23157e6484a64582853c7867f9b88150?v=492e2c8d7a8e4e369c8badfecc5c6676)<br>
 [Sass강좌 한눈에 보기](https://velopert.com/1712)
 
 ### Sass, SCSS를 쓰는 이유?
